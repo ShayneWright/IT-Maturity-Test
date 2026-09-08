@@ -37,9 +37,10 @@ Upload the contents of `assessment-production.zip` to the site's public web root
 
 ## Where to make changes
 
-- **Questions and industry branching:** `src/data/questions.ts`. Universal questions are in `coreQuestions`; targeted questions declare an `industries` array and are included by `questionsFor()`.
+- **Questions and validation:** `src/data/questions.ts`. The 24 active scored statements include stable IDs, display order, category, optional help text, scoring weight, and optional priority. Industry is profile information only and does not change the question set.
 - **Categories, result explanations, and next steps:** `src/data/questions.ts` and `src/components/Results.tsx`.
 - **Scoring:** `src/lib/scoring.ts`. Answers score Yes 5, Partially 3, Not sure 1, and No 0. Per-question weights default to 1. Category averages are equally represented in the overall score.
+- **Assessment version:** `src/config/assessment.ts`. The version is added to start/completion tracking and the printable report footer. The exact official logo is embedded as a text data URI in `src/assets/logo.ts`.
 - **Formspree and booking configuration:** `src/lib/api.ts`. The first submission gates entry. Completion and booking-event submissions are intentionally non-blocking.
 - **Flow and submission payloads:** `src/App.tsx`.
 - **Visual system and responsive styles:** `src/styles.css`.
@@ -48,4 +49,4 @@ Upload the contents of `assessment-production.zip` to the site's public web root
 
 The app captures UTM source/medium/campaign, landing URL, referrer, and timestamps in memory. It does not store contact details or assessment answers in browser storage. A refresh therefore returns to the introduction rather than retaining personal data. The report is a general readiness snapshot and never represents itself as a compliance determination.
 
-Industry branches currently cover Healthcare, Financial Services, Accounting, Legal, Government/Government Contractor, and Retail payment handling. Keep additions limited and phrased for a nontechnical business audience.
+The business profile offers Legal, Healthcare, Financial Services & Accounting, Construction & Engineering, and Other Business. Version 1.1.0 has no industry-specific assessment or scoring branches.

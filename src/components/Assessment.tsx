@@ -1,3 +1,28 @@
-import {ArrowLeft,ArrowRight,Check} from 'lucide-react';import {categories} from '../data/questions';import type {Answer,Question} from '../types';
-const choices:{value:Answer;label:string;detail:string}[]=[{value:'yes',label:'Yes',detail:'This is fully in place'},{value:'partially',label:'Partially',detail:'Some parts are in place'},{value:'no',label:'No',detail:'This is not in place'},{value:'unsure',label:'Not sure',detail:'I don’t know yet'}];
-export function Assessment({questions,index,answers,onAnswer,onBack}:{questions:Question[];index:number;answers:Record<string,Answer>;onAnswer:(a:Answer)=>void;onBack:()=>void}){const question=questions[index],pct=Math.round(index/questions.length*100);return <main className="assessment"><div className="progress-meta"><button className="back" onClick={onBack}><ArrowLeft/> Back</button><span>Question {index+1} of {questions.length}</span><span>{Math.round((index+1)/questions.length*100)}% complete</span></div><div className="progress"><i style={{width:`${pct}%`}}/></div><section className="question-wrap" key={question.id}><div className="section-label">{categories[question.category].label}</div><h1>{question.text}</h1>{question.help&&<p>{question.help}</p>}<div className="answer-grid" role="radiogroup" aria-label="Answer choices">{choices.map(c=><button key={c.value} role="radio" aria-checked={answers[question.id]===c.value} className={'answer '+(answers[question.id]===c.value?'selected':'')} onClick={()=>onAnswer(c.value)}><span className="answer-check">{answers[question.id]===c.value&&<Check/>}</span><span><b>{c.label}</b><small>{c.detail}</small></span><ArrowRight className="answer-arrow"/></button>)}</div><p className="hint">Choose the answer that best reflects your business today. There are no trick questions.</p></section></main>}
+import {ArrowLeft,ArrowRight,Check} from 'lucide-react';
+import {categories} from '../data/questions';
+import type {Answer,Question} from '../types';
+
+const choices:{value:Answer;label:string;detail:string}[]=[
+  {value:'yes',label:'Fully in place',detail:'Consistently in place across the business'},
+  {value:'partially',label:'Partly in place',detail:'In place for some people or systems'},
+  {value:'no',label:'Not in place',detail:'Not currently implemented'},
+  {value:'unsure',label:'Not sure',detail:"I'm not certain"}
+];
+
+export function Assessment({questions,index,answers,onAnswer,onBack}:{questions:Question[];index:number;answers:Record<string,Answer>;onAnswer:(a:Answer)=>void;onBack:()=>void}) {
+  const question=questions[index],pct=Math.round(index/questions.length*100);
+  return <main className="assessment">
+    <div className="progress-meta"><button className="back" onClick={onBack}><ArrowLeft/> Back</button><span>Question {index+1} of {questions.length}</span><span>{Math.round((index+1)/questions.length*100)}% complete</span></div>
+    <div className="progress"><i style={{width:`${pct}%`}}/></div>
+    <section className="question-wrap" key={question.id}>
+      <div className="section-label">{categories[question.category].label}</div>
+      <p className="question-prompt">How well does this describe your business today?</p>
+      <h1>{question.text}</h1>
+      {question.help&&<p className="question-help">{question.help}</p>}
+      <div className="answer-grid" role="radiogroup" aria-label="How well this statement describes your business">
+        {choices.map(c=><button key={c.value} role="radio" aria-checked={answers[question.id]===c.value} className={'answer '+(answers[question.id]===c.value?'selected':'')} onClick={()=>onAnswer(c.value)}><span className="answer-check">{answers[question.id]===c.value&&<Check/>}</span><span><b>{c.label}</b><small>{c.detail}</small></span><ArrowRight className="answer-arrow"/></button>)}
+      </div>
+      <p className="hint">Choose the answer that best reflects your business today. There are no trick questions.</p>
+    </section>
+  </main>;
+}
