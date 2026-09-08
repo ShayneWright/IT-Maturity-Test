@@ -27,3 +27,12 @@
   .cta{break-inside:avoid;margin:8mm 0 5mm;padding:7mm;border-radius:4mm}.cta h2{font-size:18pt}.cta .button{display:none}.print-contact{display:block;margin-top:4mm;color:#fff;font-weight:700}
   .disclaimer{font-size:8pt;margin:4mm auto}.print-report-footer{display:flex!important;justify-content:space-between;border-top:1px solid #dce4ed;margin-top:5mm;padding:4mm 0 0;color:#718197;font-size:8pt}
 }
+
+/* v1.1.1 chart reliability fixes */
+.preview-radar{display:block;transform:none!important;transform-origin:center}.preview-radar .radar-grid polygon,.preview-radar .radar-grid path{fill:none;stroke:#d9e3ed;stroke-width:1}.preview-radar .target{fill:none;stroke:#90a1b5;stroke-width:1.5;stroke-dasharray:5 4}.preview-radar .shape{fill:#1f99dd42;stroke:#1688d0;stroke-width:3}.preview-radar .radar-points circle{fill:#1688d0;stroke:#fff;stroke-width:1.5}.print-radar{display:none}.print-radar-grid polygon,.print-radar-grid line{fill:none;stroke:#d6dfeb;stroke-width:1}.print-radar-target{fill:none;stroke:#90a1b5;stroke-width:1.5;stroke-dasharray:5 4}.print-radar-score{fill:#25a4e8;fill-opacity:.28;stroke:#1976d2;stroke-width:3;stroke-linejoin:round}.print-radar text{fill:#42536a;font:600 11px 'DM Sans',sans-serif}
+
+@media print{
+  .screen-radar{display:none!important}
+  .print-radar{display:block!important;width:100mm!important;height:79mm!important;max-width:100%;margin:0 auto;overflow:visible}
+  .chart-card{overflow:visible;min-width:0}
+}

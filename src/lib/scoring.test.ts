@@ -57,8 +57,8 @@ describe('versioning',()=>{
   const contact:Contact={firstName:'A',lastName:'B',email:'a@example.com',company:'Example',phone:'',website:'',industry:'Legal',employees:'1–10',itSupport:'Not sure',cyberInsurance:'Not sure'};
   const source:Tracking={utmSource:'',utmMedium:'',utmCampaign:'',referrer:'',landingUrl:'https://example.com',startedAt:'2026-01-01'};
 
-  it('uses assessment version 1.1.0 in start and completion payloads',()=>{
-    expect(ASSESSMENT_VERSION).toBe('1.1.0');
+  it('uses assessment version 1.1.1 in start and completion payloads',()=>{
+    expect(ASSESSMENT_VERSION).toBe('1.1.1');
     expect(contactPayload(contact,source).assessmentVersion).toBe(ASSESSMENT_VERSION);
     expect(completionPayload({company:'Example'}).assessmentVersion).toBe(ASSESSMENT_VERSION);
   });
