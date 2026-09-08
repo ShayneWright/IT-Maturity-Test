@@ -1,0 +1,65 @@
+name: Build and publish production site
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  build-production:
+    name: Test, build, and publish
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 24
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint checks
+        run: npm run lint
+
+      - name: Build production site
+        run: npm run build
+
+      - name: Verify production build
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html || {
+            echo "::error::Production build is missing dist/index.html"
+            exit 1
+          }
+          test -d dist/assets || {
+            echo "::error::Production build is missing dist/assets"
+            exit 1
+          }
+
+      - name: Publish production branch
+        shell: bash
+        run: |
+          set -euo pipefail
+          deployment_directory="$(mktemp -d)"
+          cp -a dist/. "$deployment_directory/"
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan production
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$deployment_directory/." .
+          git add --all
+          git commit --allow-empty -m "Deploy production build from ${GITHUB_SHA}"
+          git push --force origin HEAD:production
