@@ -1,4 +1,4 @@
-name: Build production package
+name: Build and publish production site
 
 on:
   workflow_dispatch:
@@ -7,11 +7,11 @@ on:
       - main
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   build-production:
-    name: Test, build, and package
+    name: Test, build, and publish
     runs-on: ubuntu-latest
 
     steps:
@@ -48,20 +48,18 @@ jobs:
             exit 1
           }
 
-      - name: Create production ZIP
+      - name: Publish production branch
         shell: bash
         run: |
           set -euo pipefail
-          rm -f assessment-production.zip
-          (
-            cd dist
-            zip -r ../assessment-production.zip .
-          )
-          unzip -l assessment-production.zip
+          deployment_directory="$(mktemp -d)"
+          cp -a dist/. "$deployment_directory/"
 
-      - name: Upload production package
-        uses: actions/upload-artifact@v4
-        with:
-          name: assessment-production
-          path: assessment-production.zip
-          if-no-files-found: error
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git switch --orphan production
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a "$deployment_directory/." .
+          git add --all
+          git commit --allow-empty -m "Deploy production build from ${GITHUB_SHA}"
+          git push --force origin HEAD:production
