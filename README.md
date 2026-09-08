@@ -23,6 +23,18 @@ npm run build
 
 The static `dist/` output can be deployed to Netlify, Vercel, Cloudflare Pages, GitHub Pages, or any static host. Configure the host to serve `index.html` as the fallback if routes are added later.
 
+For a manual 20i deployment, run all checks and create an upload-ready ZIP whose root contains `index.html` and `assets/`:
+
+```bash
+npm install
+npm test
+npm run lint
+npm run build
+./scripts/package-production.sh
+```
+
+Upload the contents of `assessment-production.zip` to the site's public web root. The packaging script validates the expected build files and deliberately places the contents of `dist/`, rather than the `dist` directory itself, at the ZIP root.
+
 ## Where to make changes
 
 - **Questions and industry branching:** `src/data/questions.ts`. Universal questions are in `coreQuestions`; targeted questions declare an `industries` array and are included by `questionsFor()`.

@@ -1,0 +1,68 @@
+name: Build production package
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build-production:
+    name: Test, build, and package
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run lint checks
+        run: npm run lint
+
+      - name: Build production site
+        run: npm run build
+
+      - name: Verify production build
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f dist/index.html || {
+            echo "::error::Production build is missing dist/index.html"
+            exit 1
+          }
+          test -d dist/assets || {
+            echo "::error::Production build is missing dist/assets"
+            exit 1
+          }
+
+      - name: Create production ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -f assessment-production.zip
+          (
+            cd dist
+            zip -r ../assessment-production.zip .
+          )
+          unzip -l assessment-production.zip
+
+      - name: Upload production package
+        uses: actions/upload-artifact@v4
+        with:
+          name: assessment-production
+          path: assessment-production.zip
+          if-no-files-found: error
